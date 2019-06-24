@@ -1,20 +1,21 @@
 import renderer
 import keyboard
-from time import perf_counter as time_now
-from time import sleep
+import clock
+from time import perf_counter
 
-r = renderer.Renderer(100, 35, 60)
+FPS = 60
+
+c = clock.Clock(FPS)
+r = renderer.Renderer(100, 35, FPS)
 r.initScreen()
 
 quit = False
 
-#TODO: move timing and screen rendering to gfx.py
-then = time_now()
-now = time_now()
-elapsed = now-then
+then = perf_counter()
+elapsed = perf_counter()-then
 
 while not quit:
-    then = time_now()
+    then = perf_counter()
 
     #clear screen
     r.clearScreen()
@@ -25,13 +26,18 @@ while not quit:
         if keyboard.isPressed(keyboard.key[k]):
             keyList.append(k)
     
-    #handle game loop
-    r.writeScreen(str(1/elapsed)[:2])
+    #game loop
+    if keyboard.isPressed(keyboard.key["Q"]):
+        quit=True
+    
+    r.writeScreen(str(int(1/elapsed)) + " fps")
     r.writeScreen(" ".join(keyList),100)
 
     #print screen
     r.paintScreen()
-    now = time_now()
-    elapsed = now-then
-    if r.minRenderTime > elapsed: #if we rendered too fast (hah) limit to renderer fps by sleeping the difference
-         sleep(r.minRenderTime-elapsed)
+    
+    #automatically sleep if we rendered faster than 1/fps
+    c.sleep()
+
+    #time how long it took for game loop (not accurate to fps but close enough)
+    elapsed = perf_counter()-then

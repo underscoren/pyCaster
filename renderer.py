@@ -7,7 +7,7 @@ class Renderer:
         self._width = width
         self._height = height
         self._screen = " "*(width*height) #initialise internal screenbuffer
-        self.minRenderTime = 1/fps
+        self.fps = fps
 
     #automatically set the width and height of the console
     def initScreen(self):
@@ -32,8 +32,7 @@ class Renderer:
         std.write(self._screen)
         std.flush()
 
-    #clears both the screenbuffer and the screen
+    #clears the screenbuffer
     def clearScreen(self):
-        system("cls")
         self._screen = " "*(self._width*self._height)
     
