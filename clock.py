@@ -9,7 +9,7 @@ class Clock:
         self.frame_length = 1/fps
 
     @property
-    def tick(self): #get number of ticks(ms) since frame start
+    def tick(self): #get number of ms since frame start
         return (perf_counter() - self.start)
 
     def sleep(self): #sleep until next frame (approx 1ms resolution)
