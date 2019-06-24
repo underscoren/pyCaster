@@ -1,4 +1,3 @@
-from sys import platform as _platform
 from sys import stdout as std
 from os import system
 
@@ -11,12 +10,8 @@ class Renderer:
 
     #automatically set the width and height of the console
     def initScreen(self):
-        if _platform.startswith("win"): #win32 or win64
-            system("mode con: cols=%s lines=%s" % (self._width, self._height))
-            system("cls")
-        else: #TODO: automatically set the console size on other OSes
-            print("Your os isnt windows... You should set your console to be %s characters wide and %s characters long.")
-            input("Press any key to continue...")
+        system("mode con: cols=%s lines=%s" % (self._width, self._height))
+        system("cls")
 
     #insert strings directly into the screenbuffer
     def writeScreen(self, string, index=0):
