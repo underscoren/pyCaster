@@ -66,14 +66,14 @@ while not quit:
     if keyboard.getState(keyboard.key["W"]):
         playerX += math.sin(playerA) * speed * elapsed
         playerY += math.cos(playerA) * speed * elapsed
-        if map_tiles[int(playerX) * mapWidth + int(playerY)] == "#":
+        if map_tiles[int(playerY) * mapWidth + int(playerX)] == "#":
             playerX -= math.sin(playerA) * speed * elapsed
             playerY -= math.cos(playerA) * speed * elapsed
     
     if keyboard.getState(keyboard.key["S"]):
         playerX -= math.sin(playerA) * speed * elapsed
         playerY -= math.cos(playerA) * speed * elapsed
-        if map_tiles[int(playerX) * mapWidth + int(playerY)] == "#":
+        if map_tiles[int(playerY) * mapWidth + int(playerX)] == "#":
             playerX += math.sin(playerA) * speed * elapsed
             playerY += math.cos(playerA) * speed * elapsed
     
@@ -134,13 +134,25 @@ while not quit:
                 else:           shade = " "
                 gfx.writeLine(shade,x,y)
 
-    gfx.writeLine("{:.1f}fps X:{:.1f} Y:{:.1f} A:{:.1f}".format(1/elapsed, playerX, playerY, playerA), 0,0) #print stats
+    #print map on screen
+    for row in range(16):
+        gfx.writeLine(map_tiles[row*16:row*16+16],0,row)
+
+    #player icon
+    playerDir = "@"
+
+    angle = ((playerA+(math.pi/8))%(math.pi*2)) / (math.pi*2)
+    if angle < 0.25:    playerDir = "^"
+    elif angle < 0.5:   playerDir = "<"
+    elif angle < 0.75:  playerDir = "V"
+    else:               playerDir = ">"
+
+    gfx.writeLine(playerDir, int(playerX), int(playerY))
+
+    gfx.writeLine("{:.1f}fps X:{:.1f} Y:{:.1f} A:{:.1f}".format(1/elapsed, playerX, playerY, (playerA*180/math.pi)%360), 16,0) #print stats
 
     #print screen
     r.paintScreen()
-    
-    #automatically sleep if we executed faster than 1/fps
-    
 
     #time how long it took for the frame
     elapsed = perf_counter()-then
